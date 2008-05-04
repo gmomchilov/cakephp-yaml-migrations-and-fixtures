@@ -20,7 +20,7 @@
 */
 
 uses('file', 'folder');
-require_once('spyc.php');
+App::import('vendor','spyc');
 App::import('vendor','migrations');
 
 
