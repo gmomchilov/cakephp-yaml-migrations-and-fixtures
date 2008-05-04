@@ -51,8 +51,6 @@ class Migrations{
     var $bSpycReady = false;
     
     var $oDb;
-    
-    var $sPrefix = '';
         
     /**
     * Constructor - checks dependencies and loads the connection
@@ -82,6 +80,25 @@ class Migrations{
     */
     function down(){
         return $this->_run('DOWN');
+    }
+    
+    /**
+    * Generates an YAML file from the current DB schema
+    */
+    function generate(){
+        $aResult = array();
+        $aResult['UP'] = $aResult['DOWN'] = array();
+        $aResult['UP']['create_table'] = $aResult['DOWN']['drop_table'] = array();
+        
+        $aTables = $this->oDb->listSources();
+        foreach( $aTables as $sTable ){
+            $sTableName = str_replace( $this->getPrefix(), '', $sTable );
+            $aTableSchema = $this->_buildSchema( $sTableName );
+            $aResult['UP']['create_table'][$sTableName] = $aTableSchema;
+            $aResult['DOWN']['drop_table'][] = $sTableName;
+        }
+        
+        return Spyc::YAMLDump($aResult);
     }
     
     /**
@@ -142,12 +159,8 @@ class Migrations{
         return true;
     }
     
-    function setPrefix( $sPrefix ){
-        $this->sPrefix = $sPrefix;
-    }
-    
     function getPrefix(){
-        return $this->sPrefix;
+        return $this->oDb->config['prefix'];
     }
         
     /**
@@ -350,5 +363,39 @@ class Migrations{
             return $aErrors;
 
         return true;
+    }
+    
+    /**
+    * Build an array holding a db schema for a table
+    *
+    * @access protected
+    * @param string $sDirection
+    * @return mixed True on success and an array of errors on failure
+    */
+    function _buildSchema( $sTableName ){
+        $oTempModel = new Model( false, $sTableName );
+        $aModelFields = $this->oDb->describe($oTempModel);
+        $aTableSchema = array();
+        foreach($aModelFields as $sKey=>$aItem){
+            if($sKey!='id' && $sKey!='created' && $sKey!='modified'){
+                $default = !empty($aItem['default']) ? $aItem['default'] : 'false';
+                $setNull = $aItem['null']==true ? 'is_null' : 'not_null';
+                $aTableSchema[$sKey] = array('type'=>$aItem['type'],
+                                               'default'=>$default,
+                                               'length'=>$aItem['length'] );
+                if( !empty( $aItem['key'] ) ){
+                    $aTableSchema[$sKey][$aItem['key']] = true;
+                }
+                $aTableSchema[$sKey][] = $setNull;
+            }
+        }
+        if(!array_key_exists('id', $aModelFields)){
+            $aTableSchema[] = 'no_id';
+        }
+        if(!array_key_exists('created', $aModelFields)){
+            $aTableSchema[] = 'no_dates';
+        }
+        
+        return $aTableSchema;
     }
 }

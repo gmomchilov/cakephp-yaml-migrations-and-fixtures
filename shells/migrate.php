@@ -77,6 +77,26 @@ class MigrateShell extends Shell {
         $this->out('');
         exit;
     }
+    
+    /**
+    * Generates an YAML file from the current DB schema
+    */
+    function generate(){
+        $this->out('Generating full schema YAML file schema.yml...');
+        $this->out('');
+        $this->hr();
+        $this->out('');
+        $oFile = new File( MIGRATIONS_PATH . DS . 'schema.yml', true );
+        if( !$oFile->writable() ){
+            $this->out( '' );
+            $this->out( 'Your migrations folder is not writable - I could not write the file schema.yml . Please check your permissions.' );
+            $this->out('');
+            exit;
+        }
+        $oFile->write( $this->oMigrations->generate() );
+        $this->out( 'Schema file ( schema.yml ) successfully written!' );
+        $this->out('');
+    }
 
     /**
     * Migrates down to the previous version
@@ -187,6 +207,9 @@ class MigrateShell extends Shell {
         $this->out('');
         $this->out('  cake migrate up');
         $this->out('    - Migrates up from the current to the next version');
+        $this->out('');
+        $this->out('  cake migrate generate');
+        $this->out('    - Write an YAML file out of your current DB schema');
         $this->out('');
         $this->out('  cake migrate help');
         $this->out('    - Displays this Help');
