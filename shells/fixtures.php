@@ -28,8 +28,13 @@ class FixturesShell extends Shell {
     * Initializes some paths and checks for the required classes
     */
     function startup(){
-        define('FIXTURES_PATH', APP_PATH .'config' .DS. 'fixtures');
+        $sPath = APP_PATH .'config' .DS. 'fixtures';
 
+        if(isset($this->params['p'])) $sPath = $this->params['p'];
+        if(isset($this->params['path'])) $sPath = $this->params['path'];
+        
+        define('FIXTURES_PATH', $sPath );
+        
         if(isset($this->params['c'])) $this->sConnection = $this->params['c'];
         if(isset($this->params['connection'])) $this->sConnection = $this->params['connection'];
         
@@ -63,5 +68,40 @@ class FixturesShell extends Shell {
             }
         }
         $this->out($iCount. ' fixture(s) successfully imported');
+    }
+    
+    /**
+    * Help method
+    */
+    function help(){
+        $this->hr();
+        $this->out('');
+        $this->out('Fixtures help you import your data into your database in a DB engine');
+        $this->out('agnostic manner.');
+        $this->out('');
+        $this->out('Fixture files are YAML files.');
+        $this->out('');
+        $this->hr();
+        $this->out('');
+        $this->out('COMMAND LINE OPTIONS');
+        $this->out('');
+        $this->out('  cake fixtures');
+        $this->out('    - Imports all fixture files ( .+_fixture\.yml )');
+        $this->out('');
+        $this->out('  cake migrate help');
+        $this->out('    - Displays this Help');
+        $this->out('');
+        $this->out("    append '-c [connection]' to the command if you want to specify the");
+        $this->out('    connection to use from database.php. By default it uses "default"');
+        $this->out('');
+        $this->out("    append '-p [path]' to the command if you want to specify the");
+        $this->out('    path where the fixture files reside. Default is APP_PATH . \'config\' .DS. \'fixtures\' ');
+        $this->out('');
+        $this->out('');
+        $this->out('For more information and for the latest release of this and others,');
+        $this->out('go to http://ovalpixels.com');
+        $this->out('');
+        $this->hr();
+        $this->out('');
     }
 }
