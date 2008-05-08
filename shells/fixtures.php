@@ -2,7 +2,7 @@
 /**
  * Fixtures is a CakePHP shell script that imports data from your YAML files
  *
- * Run 'cake fixtures' for more info and help on using this script.
+ * Run 'cake fixtures help' for more info and help on using this script.
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
