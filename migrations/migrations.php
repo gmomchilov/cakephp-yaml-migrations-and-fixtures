@@ -221,7 +221,7 @@ class Migrations{
     * Generate SQL for rename table
     */
     function rename_table( $sTable, $sName ){
-        $sSql = 'ALTER TABLE `'.$sTable.'` RENAME TO `'.$sName.'`;';
+        $sSql = 'ALTER TABLE `'.$this->getPrefix().$sTable.'` RENAME TO `'.$sName.'`;';
         return $sSql;
     }
         
@@ -237,7 +237,7 @@ class Migrations{
     * Generate SQL for truncate table
     */
     function truncate_table($sTable){
-        $sSql = 'TRUNCATE `'.$sTable.'`;';
+        $sSql = 'TRUNCATE `'.$this->getPrefix().$sTable.'`;';
         return $sSql;
     }
         
@@ -245,7 +245,7 @@ class Migrations{
     * Generate SQL for add field
     */
     function add_field( $sTable, $aField ){
-        $sSql = 'ALTER TABLE `'.$sTable.'` ADD '.$this->_buildColumn( key( $aField ), $aField[key($aField)] );
+        $sSql = 'ALTER TABLE `'.$this->getPrefix().$sTable.'` ADD '.$this->_buildColumn( key( $aField ), $aField[key($aField)] );
         $sSql = trim( $sSql, ", \n\t" ).';';
         return $sSql;
     }
@@ -254,7 +254,7 @@ class Migrations{
     * Generate SQL for drop field
     */
     function drop_field( $sTable, $column ){
-        $sSql = 'ALTER TABLE `'.$sTable.'` DROP `'.$column.'`;';
+        $sSql = 'ALTER TABLE `'.$this->getPrefix().$sTable.'` DROP `'.$column.'`;';
         return $sSql;
     }
         
@@ -262,7 +262,7 @@ class Migrations{
     * Generate SQL for alter field
     */
     function alter_field( $sTable, $aField ){
-        $sSql = 'ALTER TABLE `'.$sTable.'` CHANGE `'.key( $aField ).'` '.$this->_buildColumn( 
+        $sSql = 'ALTER TABLE `'.$this->getPrefix().$sTable.'` CHANGE `'.key( $aField ).'` '.$this->_buildColumn( 
                 ( !empty( $aField['name'] ) ? $aField['name'] : key( $aField ) ),
                   $aField[key($aField)] );
         $sSql = trim( $sSql, ", \n\t" );

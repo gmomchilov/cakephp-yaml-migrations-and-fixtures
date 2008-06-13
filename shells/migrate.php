@@ -399,7 +399,7 @@ class MigrateShell extends Shell {
     function _getMigrationVersion(){
         //load tables and see if schema_info already exists. If not, create it
         $sTables = $this->oMigrations->oDb->listSources();
-        if( !in_array( 'schema_info', $sTables ) ){
+        if( !in_array( $this->oMigrations->oDb->config['prefix'].'schema_info', $sTables ) ){
             $this->oMigrations->oDb->query( 
                 $this->oMigrations->create_table(
                     'schema_info', 
