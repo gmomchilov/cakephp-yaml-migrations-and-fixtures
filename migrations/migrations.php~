@@ -209,14 +209,7 @@ class Migrations{
         if( count( $aKeys ) )
             $aIndexes = am( $aIndexes, $aKeys );
         
-        if( count( $aIndexes ) ){
-            $sIndexes = $this->oDb->buildIndex( $aIndexes );
-            //cakephp is backward incompatible!!!!
-            if( is_array( $sIndexes ) )
-                $sIndexes = join(",\n\t", $sIndexes);
-        
-            $sSql .= $sIndexes."\n\t";
-        }
+        $sSql .= ( count( $aIndexes ) ) ? $this->oDb->buildIndex( $aIndexes )."\n\t" : '';
         
         //Clear the data and return
         $sSql = trim( $sSql, ", \n\t" );
