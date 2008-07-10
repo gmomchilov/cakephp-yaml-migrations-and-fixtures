@@ -248,7 +248,6 @@ class Migrations{
 
         //there should be an id according to the new schema
         if( !in_array( 'no_id', $aFields ) ){
-            echo 'ha';
             $aIdFormat = ( $this->bUse_uuid ) ? $this->aUuid_format : $this->aId_format;
             //but there is no such one in the current schema
             if( !array_key_exists( 'id', $aCurrentFields ) ){
