@@ -135,7 +135,7 @@ class Migrations{
                         $this->aTasks[$sDirection][] = $this->rename_table( $sName, $aProperties['name'] );
                     }
                     elseif( $sAction == 'merge_table' || $sAction == 'merge_tables' ){
-                        $this->aTasks = am( $this->aTasks[$sDirection], $this->merge_table( $sName, $aProperties ) );
+                        $this->aTasks[$sDirection] = am( $this->aTasks[$sDirection], $this->merge_table( $sName, $aProperties ) );
                     }
                     elseif( $sAction == 'truncate_table' || $sAction == 'truncate_tables'){
                         $this->aTasks[$sDirection][] = $this->truncate_table( $sName );
