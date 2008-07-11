@@ -290,12 +290,16 @@ class Migrations{
                     $aQueries[] = $this->alter_field( $sTable, array( $sCurrentFieldName => $aFields[ $sCurrentFieldName ] ) );
                 }
                 
-                //keys ( except for primary! )
+                //keys ( except for primary! ) - add keys only if they don't already exist
                 $aKeys = array();
-                if( !empty( $aFields[ $sCurrentFieldName ]['unique'] ) ){
+                if( !empty( $aFields[ $sCurrentFieldName ]['unique'] ) && 
+						( !isset( $aCurrentFieldProperties['key'] ) || $aCurrentFieldProperties['key'] != "unique" )
+						){
                     $aQueries[] = $this->add_key( $sTable, array( 'unique' => $sCurrentFieldName ) );
                 }
-                if( !empty( $aFields[ $sCurrentFieldName ]['index'] ) ){
+                if( !empty( $aFields[ $sCurrentFieldName ]['index'] ) && 
+						( !isset( $aCurrentFieldProperties['key'] ) || $aCurrentFieldProperties['key'] != "index" )
+						){
                     $aQueries[] = $this->add_key( $sTable, array( 'index' => $sCurrentFieldName ) );
                 }
                         
