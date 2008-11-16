@@ -16,36 +16,38 @@ class Fixtures{
     const YAML_FILE_IS_INVALID  = -2;
     const YAML_FILE_NOT_LOADED  = -3;
     const TABLE_NOT_FOUND       = -4;
-    
+
     var $sPrefix = '';
-        
+    var $oDb;
+
     /**
     * Constructor - checks dependencies and loads the connection
     *
     * @param string $sConnecion The connection from database.php to use. Deafaults to "default"
     * @return void
     */
-    function Fixtures(){
+    function Fixtures($sConnection = 'default'){
         if(class_exists('Spyc'))
             $this->bSpycReady = true;
+        $this->oDb = & ConnectionManager::getDataSource($sConnection);
     }
-    
+
     function import($sFile){
         if( !$this->bSpycReady )
             return self::SPYC_CLASS_NOT_FOUND;
-        
+
         if( !file_exists( $sFile ) )
             return self::YAML_FILE_NOT_FOUND;
 
         $this->aTables = SPYC::YAMLload( file_get_contents( $sFile ) );
         if( !is_array( $this->aTables ) )
             return self::YAML_FILE_IS_INVALID;
-        
+
         uses('model'.DS.'model');
-        
-        $oDB = &ConnectionManager::getDataSource('default');
+
+        $oDB = $this->oDb;
         $aAllowedTables = $oDB->listSources();
-        
+
         foreach( $this->aTables as $table => $records ){
             if( !in_array( $oDB->config['prefix'].$table, $aAllowedTables ) ){
                 return self::TABLE_NOT_FOUND;
