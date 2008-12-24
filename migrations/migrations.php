@@ -9,6 +9,7 @@
 */
 
 App::import('vendor','spyc');
+App::import('Core', 'ConnectionManager');
 
 class Migrations{
     const SPYC_CLASS_NOT_FOUND  = 0;
