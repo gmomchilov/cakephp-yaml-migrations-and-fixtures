@@ -154,7 +154,7 @@ class Migrations{
                             $this->aTasks[$sDirection][] = $this->drop_field( $sName, $sField );
                     }
                     elseif( $sAction == 'query' || $sAction == 'queries'){
-                        $this->aTasks[$sDirection][] = $aElement;
+                        $this->aTasks[$sDirection][] = $this->query($aProperties);
                     }
                 }
             }
