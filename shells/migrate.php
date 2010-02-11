@@ -12,6 +12,7 @@
  * Redistributions of files must retain the above copyright notice.
  *
  * @copyright   Copyright 2008, Georgi Momchilov
+ * @copyright   Copyright 2010, John Hobbs
  * @link        http://ovalpixels.com
  * @author      Georgi Momchilov
  * @since       CakePHP(tm) v 1.2
@@ -213,6 +214,9 @@ class MigrateShell extends Shell {
         $this->out('');
         $this->out('  cake migrate help');
         $this->out('    - Displays this Help');
+        $this->out('');
+        $this->out('  cake migrate syntax');
+        $this->out('    - Displays migration syntax help (use a pager!)');
         $this->out('');
         $this->out("    append '-c [connection]' to the command if you want to specify the");
         $this->out('    connection to use from database.php. By default it uses "default"');
@@ -476,5 +480,95 @@ class MigrateShell extends Shell {
         $this->out('|   |__| |_/  |__    | | | | | _  |__| |__|  |  | |  | |\ | |__ ');
         $this->out('|__ |  | | \_ |__    | | | | |__| | \_ |  |  |  | |__| | \|  __|');
         $this->out('');
+    }
+    
+		/**
+    * Show some syntax help
+    * @author John Hobbs
+    */
+    function syntax () {
+			$this->hr();
+			$this->out( '[ Migration Syntax Tips ]' );
+			$this->hr();
+			$this->out( '* You can only do one action per migration!' );
+			$this->out( '* This guide shows the full syntax, discover & user the short syntax at your own risk.' );
+			$this->out( '* You don\'t need to specify id or created/modified fields, these are added automatically.' );
+			$this->out( '* If you don\'t want those fields, specify no_id or no_dates in your table creation.' );
+			$this->out( '' );
+			$this->hr();
+			$this->out( '[ Available Field Types ]' );
+			$this->hr();
+			foreach( $this->oMigrations->aTypes as $type )
+				$this->out( "     $type" );
+			$this->out( '' );
+			$this->hr();
+			// These are scraped by hand from Migrations::load
+			$actions = array(
+				'create_table',
+				'create_tables',
+				'drop_table',
+				'drop_tables',
+				'rename_table',
+				'rename_tables',
+				'merge_table',
+				'merge_tables',
+				'truncate_table',
+				'truncate_tables',
+				'add_field | add_column',
+				'add_fields | add_columns',
+				'alter_field | alter_column',
+				'alter_fields | alter_columns',
+				'drop_field | drop_column',
+				'drop_fields | drop_columns',
+				'query',
+				'queries',
+			);
+			$this->out( '[ Available Actions ]' );
+			$this->hr();
+			foreach( $actions as $action )
+				$this->out( "     $action" );
+			$this->out( '' );
+			$this->hr();
+			$this->out( '[ Example: Create/Delete A Table ]' );
+			$this->hr();
+			$this->out( '   UP:
+       create_table:
+         users:
+           name:
+             type: string
+             default: false
+             length: 255
+             - not_null
+           age: int
+           is_active: bool
+     DOWN:
+       drop_table: users' );
+      $this->out( '' );
+      $this->hr();
+			$this->out( '[ Example: Add/Remove A Field ]' );
+			$this->hr();
+			$this->out( '   UP:
+       add_field:
+         users:
+           last_name:
+             type: string
+             length: 10
+     DOWN:
+       drop_field:
+         users: last_name' );
+      $this->out( '' );
+      $this->hr();
+			$this->out( '[ Example: Rename A Field ]' );
+			$this->hr();
+			$this->out( '   UP:
+       rename_field:
+         users:
+           name: first_name
+     DOWN:
+       rename_field:
+         users:
+           first_name: name' );
+      $this->out( '' );
+      $this->hr();
     }
 }
