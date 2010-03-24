@@ -9,6 +9,7 @@
 */
 
 App::import('vendor','spyc');
+App::import('Core', 'ConnectionManager');
 
 class Fixtures{
     const SPYC_CLASS_NOT_FOUND  = 0;
