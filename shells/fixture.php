@@ -19,7 +19,7 @@ uses('file', 'folder');
 App::import('vendor','fixtures');
 
 
-class FixturesShell extends Shell {
+class FixtureShell extends Shell {
 
     var $sConnection = 'default';
     var $oFixtures;
